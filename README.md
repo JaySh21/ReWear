@@ -65,8 +65,8 @@ A complete e-commerce clothing swap platform built with modern JavaScript (ES6 m
    JWT_EXPIRES_IN=7d
 
    # Admin Login (for role: admin)
-   ADMIN_EMAIL=admin@rewear.com
-   ADMIN_PASSWORD=admin123
+   ADMIN_EMAIL=admin@gmail.com
+   ADMIN_PASSWORD=admin@12345
 
    # Cloudinary Configuration (for image uploads)
    CLOUDINARY_CLOUD_NAME=your-cloud-name
