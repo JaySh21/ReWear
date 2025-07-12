@@ -13,11 +13,13 @@ import {
   Filter
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { adminAPI } from '../../services/api'
 import { useAuthStore } from '../../lib/store'
 import toast from 'react-hot-toast'
 
 const MyItemsSection = () => {
+  const navigate = useNavigate()
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -44,6 +46,10 @@ const MyItemsSection = () => {
 
   const handleDelete = (id) => {
     setItems(items.filter(item => item._id !== id))
+  }
+
+  const handleViewItem = (itemId) => {
+    navigate(`/items/${itemId}`)
   }
 
   const getStatusColor = (status) => {
@@ -144,7 +150,10 @@ const MyItemsSection = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
+              <Card 
+                className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
+                onClick={() => handleViewItem(item._id)}
+              >
                 <div className="relative">
                   <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
                     <div className="text-gray-400 text-4xl">{item.images && item.images[0] ? <img src={item.images[0]} alt={item.title} className="h-16 w-16 object-cover rounded" /> : <Package />}</div>
@@ -154,6 +163,7 @@ const MyItemsSection = () => {
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 bg-white/80 hover:bg-white"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <Heart className="h-4 w-4" />
                     </Button>
@@ -161,6 +171,7 @@ const MyItemsSection = () => {
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 bg-white/80 hover:bg-white"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <Share2 className="h-4 w-4" />
                     </Button>
@@ -192,17 +203,32 @@ const MyItemsSection = () => {
                       <span>{item.likes?.length || 0}</span>
                     </div>
                     <div className="flex items-center space-x-2 pt-2">
-                      <Button variant="outline" size="sm" className="flex-1">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleViewItem(item._id)
+                        }}
+                      >
                         <Eye className="mr-1 h-3 w-3" />
                         View
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <Edit className="h-3 w-3" />
                       </Button>
                       <Button 
                         variant="outline" 
                         size="sm"
-                        onClick={() => handleDelete(item._id)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDelete(item._id)
+                        }}
                         className="text-red-600 hover:text-red-700"
                       >
                         <Trash2 className="h-3 w-3" />

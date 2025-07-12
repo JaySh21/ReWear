@@ -3,12 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight, Heart, Share2, Eye } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const FeaturedItems = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -43,6 +45,10 @@ const FeaturedItems = () => {
   const getVisibleItems = () => {
     const startIndex = currentIndex * 3;
     return items.slice(startIndex, startIndex + 3);
+  };
+
+  const handleItemClick = (itemId) => {
+    navigate(`/items/${itemId}`);
   };
 
   if (loading) {
@@ -133,7 +139,10 @@ const FeaturedItems = () => {
                     whileHover={{ y: -5 }}
                     className="group"
                   >
-                    <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
+                    <Card 
+                      className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
+                      onClick={() => handleItemClick(item.id)}
+                    >
                       <div className="relative">
                         <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
                           {item.images && item.images[0] ? (
@@ -151,6 +160,7 @@ const FeaturedItems = () => {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 bg-white/80 hover:bg-white"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <Heart className="h-4 w-4" />
                           </Button>
@@ -158,6 +168,7 @@ const FeaturedItems = () => {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 bg-white/80 hover:bg-white"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <Share2 className="h-4 w-4" />
                           </Button>
