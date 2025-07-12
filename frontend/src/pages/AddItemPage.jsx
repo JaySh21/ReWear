@@ -25,9 +25,9 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { itemsAPI } from "../services/api";
 
-// Add your Cloudinary config here
-const CLOUDINARY_CLOUD_NAME = "ddaepdoav"; // <-- CHANGE THIS
-const CLOUDINARY_UPLOAD_PRESET = "unsigned_preset"; // <-- CHANGE THIS
+// Cloudinary config is now loaded from environment variables
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 // Helper to upload a single file to Cloudinary
 async function uploadToCloudinary(file) {
@@ -85,7 +85,7 @@ const AddItemPage = () => {
     size: "",
     condition: "",
     tags: [],
-    pointCost: ""
+    pointCost: "",
   });
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -153,7 +153,11 @@ const AddItemPage = () => {
     e.preventDefault();
     // Validate point cost if type is points
     if (formData.type === "points") {
-      if (!formData.pointCost || isNaN(formData.pointCost) || Number(formData.pointCost) <= 0) {
+      if (
+        !formData.pointCost ||
+        isNaN(formData.pointCost) ||
+        Number(formData.pointCost) <= 0
+      ) {
         setPointCostError("Point Cost is required and must be greater than 0");
         return;
       }
@@ -341,7 +345,9 @@ const AddItemPage = () => {
                         required
                       />
                       {pointCostError && (
-                        <p className="text-red-500 text-sm mt-1">{pointCostError}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {pointCostError}
+                        </p>
                       )}
                     </div>
                   )}
