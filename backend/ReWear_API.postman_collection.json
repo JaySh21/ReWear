@@ -1,0 +1,652 @@
+{
+  "info": {
+    "name": "ReWear API",
+    "description": "Complete API collection for ReWear clothing swap platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.collectionVariables.set('token', pm.response.json().data.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"avatarUrl\": \"https://example.com/avatar.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "item": [
+        {
+          "name": "Get All Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/items?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "items"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Item by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/items/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "items", "{{itemId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Blue T-Shirt\",\n  \"description\": \"Comfortable cotton t-shirt in good condition\",\n  \"category\": \"tops\",\n  \"type\": \"swap\",\n  \"size\": \"M\",\n  \"condition\": \"good\",\n  \"images\": [\"https://example.com/image1.jpg\"],\n  \"tags\": [\"cotton\", \"casual\", \"blue\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "items"]
+            }
+          }
+        },
+        {
+          "name": "Create Points Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Red Dress\",\n  \"description\": \"Beautiful red dress for special occasions\",\n  \"category\": \"dresses\",\n  \"type\": \"points\",\n  \"size\": \"L\",\n  \"condition\": \"like-new\",\n  \"images\": [\"https://example.com/dress1.jpg\"],\n  \"tags\": [\"dress\", \"red\", \"formal\"],\n  \"pointCost\": 150\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "items"]
+            }
+          }
+        },
+        {
+          "name": "Update Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Blue T-Shirt\",\n  \"description\": \"Updated description\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/items/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "items", "{{itemId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/items/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "items", "{{itemId}}"]
+            }
+          }
+        },
+        {
+          "name": "Like Item",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/items/{{itemId}}/like",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "items", "{{itemId}}", "like"]
+            }
+          }
+        },
+        {
+          "name": "Get My Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/items/my-items?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "items", "my-items"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Swaps",
+      "item": [
+        {
+          "name": "Get My Swaps",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/swaps?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "swaps"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Swaps",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/swaps/pending?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "swaps", "pending"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Request Swap",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestItemId\": \"{{requestItemId}}\",\n  \"offeredItemId\": \"{{offeredItemId}}\",\n  \"type\": \"swap\",\n  \"notes\": \"Would love to swap these items!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/swaps/request",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "swaps", "request"]
+            }
+          }
+        },
+        {
+          "name": "Request Points Redemption",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestItemId\": \"{{requestItemId}}\",\n  \"type\": \"points\",\n  \"pointsUsed\": 150,\n  \"notes\": \"Redeeming with points\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/swaps/request",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "swaps", "request"]
+            }
+          }
+        },
+        {
+          "name": "Respond to Swap",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"accept\",\n  \"notes\": \"Great swap!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/swaps/{{swapId}}/respond",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "swaps", "{{swapId}}", "respond"]
+            }
+          }
+        },
+        {
+          "name": "Complete Swap",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/swaps/{{swapId}}/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "swaps", "{{swapId}}", "complete"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Points",
+      "item": [
+        {
+          "name": "Get Points Balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/points/balance",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "balance"]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/points/history?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "history"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Redeem Item with Points",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pointsUsed\": 150\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/points/redeem/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "redeem", "{{itemId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/points/leaderboard?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "points", "leaderboard"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"admin\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/items/pending?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "items", "pending"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approved\": true,\n  \"notes\": \"Item looks good!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/items/{{itemId}}/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "items", "{{itemId}}", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Reject Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approved\": false,\n  \"notes\": \"Item does not meet guidelines\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/items/{{itemId}}/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "items", "{{itemId}}", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Get All Swaps",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/swaps?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "swaps"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Adjust User Points",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"delta\": 100,\n  \"reason\": \"bonus\",\n  \"description\": \"Bonus points for being awesome!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/points/adjust",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "points", "adjust"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+} 
